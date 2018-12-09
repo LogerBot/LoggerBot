@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="colorlib.com">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,800" rel="stylesheet" />
+    <link href="assets/css/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="s006">
+      <form>
+        <fieldset>
+            <h1 align="center" id= "Números" style="width:100%; color:rgb(255, 255, 255); font-size:25px;"></h1>
+          <legend align="center">Search for discord users</legend>
+          <div class="inner-form">
+            <div class="input-field">
+                <button class="btn-search" type="button" onclick="tester()" value="Reset">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+              </button>
+              <input id="search" type="text" placeholder="Username" value=""/>
+            </div>
+          </div>
+          <div class="suggestion-wrap">
+              <div class="Main">
+                  <table style="width:100%; color:rgb(255, 255, 255); font-size:10px;">
+                      <h1 id="table"></h1>
+                        </table>
+              </div>         
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </body>
+</html>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyD0r1zfuSV1ZfP08YbZ-fOZY4lw3XLLboA",
+    authDomain: "discord-fdbba.firebaseapp.com",
+    databaseURL: "https://discord-fdbba.firebaseio.com",
+    projectId: "discord-fdbba",
+    storageBucket: "",
+    messagingSenderId: "757715077798"
+  };
+  firebase.initializeApp(config);
+
+
+  var database = firebase.database();
+  function tester() {
+    var x = document.getElementById('search').value;
+    var name = document.getElementById('table')
+    database.ref(`Global/User/`).orderByChild('User').on("value", function(snapshot) {
+        snapshot.forEach(function(data) {
+          var has = Boolean(data.key.includes(x))
+            if(data.key.includes(x)){
+               $("table").append("<h1>"+ "Name: "+ data.val().User +"&nbsp"+ "&nbsp&nbsp&nbsp&nbspID:  " +data.val().ID + "</h1>")
+            }
+        });
+    });
+  }
+
+  // Auto Reaload data
+  $(document).ready(function(){
+    setInterval(function(){
+      database.ref('Global/User/')
+.once('value').then(async function(data) {
+  var Num = document.getElementById('Números')
+  Num.innerHTML = `${data.numChildren()} registered people`
+
+});
+    });
+    }, 1000);
+     
+
+
+
+</script>
